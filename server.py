@@ -1,16 +1,20 @@
+'''The server that runs the emotion detector on port 5000 using flask.
+'''
 from flask import Flask, request, render_template
 from EmotionDetection.emotion_detection import emotion_detector
 
 app = Flask(__name__)
 
 @app.route("/emotionDetector")
-def RunSentimentAnalysis():
+def run_sentiment_analysis():
+    '''Takes the input text from the front-end and returns the emotions from the input formatted.
+    '''
     text_to_analyze = request.args.get("textToAnalyze")
     response = emotion_detector(text_to_analyze)
-    
-    if response["dominant_emotion"] == None:
+
+    if response["dominant_emotion"] is None:
         return "Invalid text! Please try again!"
-    
+
     keys = list(response.keys())
     vals = list(response.values())
     return (f"For the given statement, the system response is '{keys[0]}': {vals[0]}, "
@@ -20,6 +24,8 @@ def RunSentimentAnalysis():
 
 @app.route("/")
 def render_index_page():
+    '''Renders the index.html page on the server.
+    '''
     return render_template("index.html")
 
 if __name__ == "__main__":
